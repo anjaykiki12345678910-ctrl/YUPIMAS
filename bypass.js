@@ -21,7 +21,7 @@
     document.getElementById("resbob-auth-box")?.remove();
     document.getElementById("resbob-floating-credit")?.remove();
 
-    // ─── INJECT ULTIMATE STYLE ──────────────────────────────────────
+    // ─── ULTIMATE STYLE (GLASSMORPHISM + KEY SYSTEM) ──────────────
     const styleEl = document.createElement("style");
     styleEl.textContent = `
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900;800&display=swap');
@@ -29,7 +29,6 @@
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font-family: 'Inter', sans-serif; overflow: hidden; }
 
-      /* ── ANIMATIONS ── */
       @keyframes fadeSlide {
         0% { opacity: 0; transform: translateY(30px) scale(0.96); filter: blur(4px); }
         100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
@@ -51,13 +50,7 @@
         50% { transform: translateY(-6px); }
         100% { transform: translateY(0px); }
       }
-      @keyframes matrixRain {
-        0% { opacity: 0.08; }
-        50% { opacity: 0.15; }
-        100% { opacity: 0.08; }
-      }
 
-      /* ── GLASS CARD ── */
       .resbob-glass {
         background: rgba(8, 8, 12, 0.88);
         backdrop-filter: blur(20px);
@@ -67,7 +60,6 @@
         transition: all 0.4s ease;
       }
 
-      /* ── MAIN AUTH BOX ── */
       .resbob-auth-box {
         position: fixed;
         top: 50%;
@@ -215,7 +207,6 @@
         transition: all 0.3s;
       }
 
-      /* ── KEY SELECTOR ── */
       .resbob-key-select {
         display: flex;
         gap: 14px;
@@ -262,11 +253,46 @@
         pointer-events: none;
       }
 
-      /* ── PROGRESS BAR ── */
+      .resbob-mode-select {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 10px 0 20px;
+      }
+      .resbob-mode-btn {
+        width: 100%;
+        padding: 16px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        text-transform: uppercase;
+        background: transparent;
+        border: 1px solid rgba(255,0,51,0.15);
+        color: rgba(255,255,255,0.5);
+      }
+      .resbob-mode-btn:hover {
+        background: rgba(255,0,51,0.05);
+        border-color: #ff0033;
+        color: #fff;
+        transform: scale(1.02);
+      }
+      .resbob-mode-btn .duration {
+        display: block;
+        font-size: 11px;
+        font-weight: 400;
+        color: rgba(255,255,255,0.2);
+        margin-top: 4px;
+        letter-spacing: 1px;
+      }
+
       .resbob-progress-wrap {
         background: rgba(255,255,255,0.03);
-        height: 4px;
-        border-radius: 10px;
+        height: 6px;
+        border-radius: 20px;
         overflow: hidden;
         margin: 28px 0 14px;
         box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
@@ -276,7 +302,7 @@
         width: 0%;
         background: linear-gradient(90deg, #ff0033, #ff3366, #ff0033);
         background-size: 200% 100%;
-        border-radius: 10px;
+        border-radius: 20px;
         transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
         box-shadow: 0 0 25px #ff0033;
         animation: glowPulse 1.8s infinite;
@@ -300,7 +326,6 @@
         font-variant-numeric: tabular-nums;
       }
 
-      /* ── TIMER OVERLAY ── */
       .resbob-timer-overlay {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
@@ -321,7 +346,6 @@
         border: 1px solid rgba(255,0,51,0.08);
       }
 
-      /* ── FLOATING CREDIT ── */
       .resbob-credit {
         position: fixed;
         bottom: 22px;
@@ -368,11 +392,12 @@
         background: rgba(255,0,51,0.03);
       }
 
-      /* ── RESPONSIVE ── */
       @media (max-width: 480px) {
         .resbob-auth-box { padding: 34px 20px 26px; }
         .resbob-key-option { min-width: 70px; font-size: 13px; padding: 12px 6px; }
         .resbob-title { font-size: 22px; }
+        .resbob-mode-btn { font-size: 12px; padding: 14px; }
+        .resbob-timer-card { width: 300px; padding: 30px 20px; }
       }
     `;
     document.head.appendChild(styleEl);
@@ -496,7 +521,7 @@
       if (TELEGRAM_LINK?.startsWith("http")) window.open(TELEGRAM_LINK, "_blank");
     });
 
-    // ─── RUN REDIRECT WITH PROGRESS BAR ──────────────────────────────
+    // ─── RUN REDIRECT WITH ULTRA PROGRESS BAR ──────────────────────
     function runRedirect(countdownSeconds) {
       matrixState = "BYPASS";
       authBox.remove();
@@ -596,7 +621,7 @@
 
             <div class="resbob-key-select">
               <div class="resbob-key-option fake" id="resbob-key-resbob">
-                @RESBOB
+                AINCARD PROXY
                 <span class="badge">LOCKED</span>
               </div>
               <div class="resbob-key-option active" id="resbob-key-aincard">
@@ -627,7 +652,7 @@
           optResbob.addEventListener("click", () => {
             optResbob.classList.add("active");
             optAincard.classList.remove("active");
-            selected = "AINCARD PROXY";
+            selected = "FAKE";
             execBtn.disabled = true;
             execBtn.style.opacity = "0.4";
             execBtn.textContent = "LOCKED";
@@ -635,7 +660,21 @@
 
           execBtn.addEventListener("click", () => {
             if (selected === "AINCARD") {
-              runRedirect(30);
+              // ─── SHOW MODE SELECT (FAST / SECURE / SAFE) ────────────
+              authBox.innerHTML = `
+                <div style="font-size:20px; font-weight:800; color:#fff; letter-spacing:3px; margin-bottom:2px;">SELECT MODE</div>
+                <div style="color:rgba(255,255,255,0.15); font-size:11px; letter-spacing:2px; margin-bottom:20px;">BYPASS LEVEL</div>
+
+                <div class="resbob-mode-select">
+                  <button class="resbob-mode-btn" id="resbob-mode-fast">FAST <span class="duration">(30s)</span></button>
+                  <button class="resbob-mode-btn" id="resbob-mode-secure">SECURE <span class="duration">(45s)</span></button>
+                  <button class="resbob-mode-btn" id="resbob-mode-safe">SAFE <span class="duration">(60s)</span></button>
+                </div>
+              `;
+
+              document.getElementById("resbob-mode-fast").addEventListener("click", () => runRedirect(30));
+              document.getElementById("resbob-mode-secure").addEventListener("click", () => runRedirect(45));
+              document.getElementById("resbob-mode-safe").addEventListener("click", () => runRedirect(60));
             } else {
               alert("AINCARD PROXY IS LOCKED! SELECT AINCARD.");
             }
