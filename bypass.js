@@ -1,35 +1,35 @@
 (function () {
   "use strict";
 
-  // ─── DECODER ──────────────────────────────────────────────────────────────────
+  //decode
   const _decode = (str) => atob(str);
 
-  // ─── ENCRYPTED CONFIG (BASE64) ──────────────────────────────────────────────
+  //enc
   const CONFIG = {
-    // old endpoints tetap, gak diutak-atik
+    // old endpoints
     r: _decode("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2Rib2ZjaGwvYnlwYXNzL21haW4vYnlwYXNzLnR4dA=="), 
     t: _decode("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2Rib2ZjaGwvYnlwYXNzL21haW4vY2gudHh0"),
     m: _decode("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY39tL3Zhbnotd2Vic2l0ZS9WYW56QnlwYXNzL21haW4vbXVzaWMubXAz"),
   };
 
-  // ─── TELEGRAM LINK ENCRYPTED ──────────────────────────────────────────────
-  const TELEGRAM_LINK = _decode("aHR0cHM6Ly90Lm1lL3l1cGltYXM=");  // https://t.me/yupimas
-  const VALID_KEYS = ["resbob"];  // default key, bisa diganti
+  //tele
+  const TELEGRAM_LINK = _decode("aHR0cHM6Ly90Lm1lL3l1cGltYXM=");  //my tele
+  const VALID_KEYS = ["YUPIMAS"];  // default key
 
-  // ─── GLOBAL STATE ──────────────────────────────────────────────────────────
+  //global
   let audioPlayer = null;
-  let matrixState = "LOGIN"; // LOGIN, OVERLOAD, BYPASS
-  const TITLE = "RESBOB BYPASS";
+  let matrixState = "LOGIN"; //login
+  const TITLE = "RESBOB AINCARD";
   const FALLBACK_MUSIC_URL = _decode("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY39tL3Zhbnotd2Vic2l0ZS9WYW56QnlwYXNzL21haW4vbXVzaWMubXAz");
 
-  // ─── MAIN EXECUTION ──────────────────────────────────────────────────────
+  //main exec
   (async function () {
-    // Bersihkan elemen lama
+    //bersihin elemen
     document.getElementById("matrix-bg-canvas")?.remove();
     document.getElementById("resbob-auth-box")?.remove();
     document.getElementById("resbob-floating-credit")?.remove();
 
-    // ── INJECT STYLE ──────────────────────────────────────────────────────
+    //inject
     const styleEl = document.createElement("style");
     styleEl.textContent = `
       @keyframes neon-pulse-red {
@@ -69,7 +69,7 @@
     `;
     document.head.appendChild(styleEl);
 
-    // ── MATRIX CANVAS (DARK BACKGROUND) ──────────────────────────────────
+    //matrix canvas
     const canvas = document.createElement("canvas");
     canvas.id = "matrix-bg-canvas";
     canvas.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; z-index:2147483640; background:#0a0a0a;";
@@ -94,7 +94,7 @@
       ctx.fillStyle = matrixState === "LOGIN" ? "rgba(10, 10, 10, 0.06)" : "rgba(15, 5, 5, 0.08)";
       ctx.fillRect(0, 0, width, height);
 
-      // Warna karakter: merah saat state tertentu, abu-abu saat login
+      //warna char
       ctx.fillStyle = matrixState === "LOGIN" ? "#4a4a4a" : (matrixState === "OVERLOAD" ? "#ff0033" : "#ff3366");
       ctx.font = fontSize + "px monospace";
 
@@ -111,7 +111,7 @@
     }
     let matrixInterval = setInterval(drawMatrix, 33);
 
-    // ── FLOATING CREDIT ──────────────────────────────────────────────────
+    //floating
     const creditLink = document.createElement("a");
     creditLink.id = "resbob-floating-credit";
     creditLink.className = "resbob-credit";
@@ -120,7 +120,7 @@
     creditLink.target = "_blank";
     document.body.appendChild(creditLink);
 
-    // ── AUTH BOX ──────────────────────────────────────────────────────────
+    //auth
     const authBox = document.createElement("div");
     authBox.id = "resbob-auth-box";
     authBox.style.cssText = `
@@ -145,7 +145,7 @@
         font-weight:900; text-transform:uppercase; text-shadow:0 0 8px rgba(255,0,51,0.3);
       ">${TITLE}</h3>
       <p style="margin:0 0 30px 0; color:#666; font-size:10px; letter-spacing:1px;">
-        AUTH_v2.0
+        AUTH v2.0
       </p>
 
       <input type="text" id="resbob-key-input" class="resbob-input-glow" placeholder="[ ACCESS KEY ]" style="
@@ -170,19 +170,19 @@
       ">TELEGRAM</button>
 
       <div id="resbob-status" style="margin-top:25px; font-size:10px; color:#555; letter-spacing:1px;">
-        STATUS: IDLE
+        STATUS: WORKING
       </div>
     `;
     document.body.appendChild(authBox);
 
-    // ── DOM REFS ──────────────────────────────────────────────────────────
+    //dom refre
     const musicBtn    = document.getElementById("resbob-music-btn");
     const keyInput    = document.getElementById("resbob-key-input");
     const loginBtn    = document.getElementById("resbob-login-btn");
     const telegramBtn = document.getElementById("resbob-telegram-btn");
     const statusEl    = document.getElementById("resbob-status");
 
-    // ── MUSIC ─────────────────────────────────────────────────────────────
+    //music
     let musicLoading = false;
     musicBtn.addEventListener("click", async () => {
       if (musicLoading) return;
@@ -217,86 +217,86 @@
       if (TELEGRAM_LINK?.startsWith("http")) window.open(TELEGRAM_LINK, "_blank");
     });
 
-    // ── REDIRECT WITH TIMER ──────────────────────────────────────────────
-    function runRedirect(countdownSeconds) {
-      matrixState = "BYPASS";
-      authBox.remove();
+//progress bar
+function runRedirect(countdownSeconds) {
+  matrixState = "BYPASS";
+  authBox.remove();
 
-      const DASH_TOTAL = 597;
-      const overlay = document.createElement("div");
-      overlay.id = "resbob-timer-overlay";
-      overlay.style.cssText = `
-        position:fixed; top:0; left:0; width:100%; height:100%; z-index:2147483645;
-        display:flex; align-items:center; justify-content:center; font-family:inherit;
-        background:rgba(0,0,0,0.7);
-      `;
-      overlay.innerHTML = `
-        <div style="position:relative; z-index:10; text-align:center;">
-          <div style="position:relative; width:260px; height:260px; margin:0 auto; display:flex; align-items:center; justify-content:center;">
-            <div style="position:absolute; top:50%; left:50%; width:230px; height:230px; border-radius:50%;
-                        background:conic-gradient(transparent 0deg, #ff0033 180deg, transparent 360deg);
-                        filter:blur(20px); opacity:0.3; animation:spin-clockwise 3s linear infinite;"></div>
-            <div style="position:absolute; top:50%; left:50%; width:215px; height:215px; border-radius:50%;
-                        border:2px dashed rgba(255,0,51,0.15); animation:spin-counter 8s linear infinite;"></div>
-            <svg width="250" height="250" style="transform:rotate(-90deg); position:relative;">
-              <circle cx="125" cy="125" r="95" fill="rgba(10,10,10,0.9)" stroke="rgba(255,0,51,0.05)" stroke-width="12"></circle>
-              <circle id="resbob-progress" cx="125" cy="125" r="95" fill="none" stroke="#ff0033" stroke-width="8"
-                      stroke-dasharray="${DASH_TOTAL}" stroke-dashoffset="${DASH_TOTAL}" stroke-linecap="round"
-                      style="filter:drop-shadow(0 0 8px #ff0033); transition:stroke-dashoffset 1s linear;"></circle>
-            </svg>
-            <div id="resbob-countdown" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-                        font-size:58px; font-weight:900; color:#fff; text-shadow:0 0 20px #ff0033;">${countdownSeconds}</div>
-          </div>
-          <p id="resbob-hud" style="margin-top:35px; color:#ff0033; font-size:12px; font-weight:bold; letter-spacing:4px;
-                     text-shadow:0 0 10px rgba(255,0,51,0.3); text-transform:uppercase;">INITIATING_BYPASS...</p>
-        </div>
-      `;
-      document.body.appendChild(overlay);
+  const overlay = document.createElement("div");
+  overlay.id = "resbob-timer-overlay";
+  overlay.style.cssText = `
+    position:fixed; top:0; left:0; width:100%; height:100%; z-index:2147483645;
+    display:flex; align-items:center; justify-content:center; font-family:inherit;
+    background:rgba(0,0,0,0.85); backdrop-filter:blur(6px);
+  `;
+  overlay.innerHTML = `
+    <div style="position:relative; z-index:10; text-align:center; width:320px; padding:30px; background:rgba(10,10,10,0.9); border-radius:16px; border:1px solid rgba(255,0,51,0.3); box-shadow:0 0 50px rgba(255,0,51,0.15);">
+      <h3 style="color:#ff0033; font-size:18px; letter-spacing:3px; margin-top:0; text-shadow:0 0 10px #ff0033;">BYPASS IN PROGRESS</h3>
+      <div style="background:rgba(255,255,255,0.05); height:8px; border-radius:8px; overflow:hidden; margin:25px 0 10px 0; box-shadow:inset 0 0 10px rgba(0,0,0,0.5);">
+        <div id="resbob-progress-bar" style="width:0%; height:100%; background:linear-gradient(90deg, #ff0033, #ff3366); transition:width 1s linear; border-radius:8px; box-shadow:0 0 15px #ff0033;"></div>
+      </div>
+      <div id="resbob-status-text" style="color:#ff3366; font-size:12px; letter-spacing:2px; margin:10px 0 5px 0; text-shadow:0 0 8px rgba(255,51,102,0.3);">INITIATING...</div>
+      <div id="resbob-countdown-text" style="color:#fff; font-size:22px; font-weight:bold; letter-spacing:2px; text-shadow:0 0 20px #ff0033;">${countdownSeconds}s</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
 
-      let remaining = countdownSeconds;
-      const progressCircle = document.getElementById("resbob-progress");
-      const countdownText  = document.getElementById("resbob-countdown");
-      const hudStatus      = document.getElementById("resbob-hud");
+  const progressBar = document.getElementById("resbob-progress-bar");
+  const statusText  = document.getElementById("resbob-status-text");
+  const countdownEl = document.getElementById("resbob-countdown-text");
 
-      const logs = ["OVERRIDING_GATEWAY...", "INJECTING_PAYLOAD...", "BYPASS_SUCCESS_REDIRECTING..."];
+  let remaining = countdownSeconds;
+  const total = countdownSeconds;
+  const statusMessages = [
+    "INITIATING CONNECTION...",
+    "OVERRIDING GATEWAY...",
+    "INJECTING PAYLOAD...",
+    "BYPASSING DETECTION...",
+    "ESTABLISHING TUNNEL...",
+    "HANDSHAKE IN PROGRESS...",
+    "ALMOST THERE...",
+    "FINALIZING..."
+  ];
 
-      const timer = setInterval(async () => {
-        remaining--;
-        if (countdownText) countdownText.textContent = remaining;
-        if (progressCircle) progressCircle.style.strokeDashoffset = DASH_TOTAL * (remaining / countdownSeconds);
+  const timer = setInterval(async () => {
+    remaining--;
+    const percent = ((total - remaining) / total) * 100;
+    progressBar.style.width = Math.min(percent, 100) + "%";
+    countdownEl.textContent = remaining + "s";
 
-        if (hudStatus && remaining % 8 === 0 && remaining > 0) {
-          hudStatus.textContent = logs[Math.floor(Math.random() * logs.length)];
+    //update status
+    const idx = Math.min(Math.floor((total - remaining) / (total / statusMessages.length)), statusMessages.length - 1);
+    statusText.textContent = statusMessages[idx] || "PROCESSING...";
+
+    if (remaining <= 0) {
+      clearInterval(timer);
+      clearInterval(matrixInterval);
+      statusText.textContent = "HANDSHAKE ESTABLISHED!";
+      progressBar.style.width = "100%";
+      if (audioPlayer) { audioPlayer.pause(); audioPlayer = null; }
+
+      try {
+        const res = await fetch(CONFIG.r + "?t=" + Date.now(), { credentials: "omit" });
+        const redirectUrl = (await res.text()).trim();
+        document.getElementById("matrix-bg-canvas")?.remove();
+        overlay.remove();
+        if (redirectUrl.startsWith("http")) {
+          window.location.replace(redirectUrl);
+        } else {
+          alert("CRITICAL ERR: TARGET NOT FOUND");
         }
-
-        if (remaining <= 0) {
-          clearInterval(timer);
-          clearInterval(matrixInterval);
-          if (hudStatus) hudStatus.textContent = "HANDSHAKE_ESTABLISHED!";
-          if (audioPlayer) { audioPlayer.pause(); audioPlayer = null; }
-
-          try {
-            const res = await fetch(CONFIG.r + "?t=" + Date.now(), { credentials: "omit" });
-            const redirectUrl = (await res.text()).trim();
-            document.getElementById("matrix-bg-canvas")?.remove();
-            overlay.remove();
-            if (redirectUrl.startsWith("http")) {
-              window.location.replace(redirectUrl);
-            } else {
-              alert("CRITICAL_ERR: TARGET NOT FOUND");
-            }
-          } catch {
-            alert("NETWORK_TIMEOUT: REDIRECT FAILED");
-          }
-        }
-      }, 1000);
+      } catch {
+        alert("NETWORK TIMEOUT: REDIRECT FAILED");
+      }
     }
+  }, 1000);
+}
 
-    // ── LOGIN LOGIC ──────────────────────────────────────────────────────
+    //login
     loginBtn.addEventListener("click", () => {
       const inputKey = keyInput.value.trim();
       if (!inputKey) {
-        statusEl.innerHTML = "<span style='color:#ff0033;'>ERR: KEY_EMPTY</span>";
+        statusEl.innerHTML = "<span style='color:#ff0033;'>ERR: KEY EMPTY</span>";
         return;
       }
 
@@ -304,7 +304,7 @@
 
       if (isValid) {
         matrixState = "OVERLOAD";
-        statusEl.innerHTML = "<span style='color:#ff0033;'>KEY_VERIFIED // LOADING</span>";
+        statusEl.innerHTML = "<span style='color:#ff0033;'>KEY VERIFIED // LOADING</span>";
         loginBtn.disabled = true;
         keyInput.disabled = true;
 
@@ -313,10 +313,10 @@
           authBox.style.boxShadow = "0 0 40px rgba(255,0,51,0.15)";
           authBox.innerHTML = `
             <h3 style="margin:5px 0 2px 0; color:#ff0033; font-size:20px; letter-spacing:2px; font-weight:900; text-shadow:0 0 10px rgba(255,0,51,0.3);">
-              SELECT_MODE
+              SELECT MODE
             </h3>
             <p style="margin:0 0 25px 0; color:#666; font-size:10px; letter-spacing:1px;">
-              BYPASS_LEVEL
+              BYPASS LEVEL #AINCARD
             </p>
             <button id="resbob-btn-fast"   class="resbob-mode-btn" style="border-color:#ff3366; color:#ff3366;">FAST (30s)</button>
             <button id="resbob-btn-secure" class="resbob-mode-btn" style="border-color:#ff0033; color:#ff0033;">SECURE (45s)</button>
@@ -328,7 +328,7 @@
         }, 800);
 
       } else {
-        statusEl.innerHTML = "<span style='color:#ff0033;'>ERR: BAD_KEY</span>";
+        statusEl.innerHTML = "<span style='color:#ff0033;'>ERR: BAD KEY</span>";
         authBox.style.transform = "translate(-50%, -50%) scale(1.02)";
         setTimeout(() => authBox.style.transform = "translate(-50%, -50%) scale(1)", 150);
       }
