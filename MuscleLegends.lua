@@ -46,8 +46,21 @@ do
 		end)
 	end
 end
+
+-- RawExploits Muscle Legends Menu GUI Identity
+-- Author: RawExploits
+-- Developed: RawExploits
+local RawExploitsGUI = {
+    Product = "RawExploits Muscle Legends Menu",
+    Author = "RawExploits",
+    Developed = "RawExploits",
+    LicenseKey = "R4W-3XPL01TS-P4ID"
+}
+
 local public = {
-	["Title"] = "\226\154\161  \194\161Young0x Hub  -  Cracked & deobfuscated by 2zvh!  \226\154\161",
+	["Author"] = "RawExploits",
+	["Developer"] = "RawExploits",
+	["Title"] = "\226\154\161  \194\161RawExploits Muscle Legends Menu  \226\154\161",
 	["Discord"] = "https://2zvh.xyz/",
 	["YouTube"] = "https://www.youtube.com/@Real_Young0x",
 	["Size"] = {
@@ -3641,11 +3654,11 @@ do
 	createFrame(parent, "\240\159\140\144 Info Server \240\159\140\144")
 	createStatusDot(parent, "Game:", "Muscle Legends", colors.cyan)
 	local alternateTextResult = createStatusDot(parent, "Server Players:", "0/0", colors.white)
-	createFrame(parent, "\226\154\161 Info Young0x Hub & 2zvh \226\154\161")
+	createFrame(parent, "\226\154\161 Info RawExploits Muscle Legends Menu & 2zvh \226\154\161")
 	createStatusDot(parent, "Script:", "Fast Glitch 100%", colors.cyan)
-	createStatusDot(parent, "Autor:", "Young0x", colors.white)
-    createStatusDot(parent, "Cracker:", "2zvh", colors.white)
-	createTextButton(parent, "2zvh's Socials!!", function(instance, ...)
+	createStatusDot(parent, "Autor:", "RawExploits", colors.white)
+    createStatusDot(parent, "Developed:", "2zvh", colors.white)
+	createTextButton(parent, "Raw Socials!!", function(instance, ...)
 		local text = instance.Text
 		instance.Text = additionalHandler(public.Discord) and "Link copiado" or text
 		task.delay(1.1, function(...)
