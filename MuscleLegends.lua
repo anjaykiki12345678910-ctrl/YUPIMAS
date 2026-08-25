@@ -1,4 +1,117 @@
 local players = game:GetService("Players")
+
+-- Raw3xploits Key System
+-- Saved authorization for this executor environment
+local Raw3xploitsKey = "R4W-3XPL01TS-P4ID"
+local Raw3xploitsKeyFile = "Raw3xploits_Key_Save.txt"
+
+local function Raw3xploitsHasSavedKey()
+    if isfile and readfile then
+        local ok, data = pcall(function()
+            return readfile(Raw3xploitsKeyFile)
+        end)
+        return ok and data == Raw3xploitsKey
+    end
+    return false
+end
+
+local function Raw3xploitsSaveKey()
+    if writefile then
+        pcall(function()
+            writefile(Raw3xploitsKeyFile, Raw3xploitsKey)
+        end)
+    end
+end
+
+if not Raw3xploitsHasSavedKey() then
+    local inputGui = Instance.new("ScreenGui")
+    inputGui.Name = "Raw3xploitsKeySystem"
+    inputGui.ResetOnSpawn = false
+    inputGui.Parent = game:GetService("CoreGui")
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 460, 0, 250)
+    frame.Position = UDim2.new(0.5, -230, 0.5, -125)
+    frame.BackgroundColor3 = Color3.fromRGB(10, 12, 28)
+    frame.BackgroundTransparency = 0.05
+    frame.Parent = inputGui
+
+    local frameCorner = Instance.new("UICorner")
+    frameCorner.CornerRadius = UDim.new(0, 18)
+    frameCorner.Parent = frame
+
+    local frameStroke = Instance.new("UIStroke")
+    frameStroke.Thickness = 2
+    frameStroke.Transparency = 0.15
+    frameStroke.Color = Color3.fromRGB(140, 80, 255)
+    frameStroke.Parent = frame
+
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 25, 60)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 35, 150))
+    })
+    gradient.Rotation = 45
+    gradient.Parent = frame
+
+    frame.Size = UDim2.new(0, 20, 0, 20)
+    game:GetService("TweenService"):Create(frame, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Size = UDim2.new(0, 460, 0, 250)
+    }):Play()
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1,0,0,50)
+    title.BackgroundTransparency = 1
+    title.Text = "RAW3XPLOITS  |  PREMIUM KEY SYSTEM\nMuscle Legends Menu"
+    title.TextWrapped = true
+    title.TextColor3 = Color3.fromRGB(255,255,255)
+    title.TextScaled = true
+    title.Font = Enum.Font.GothamBold
+    title.Parent = frame
+
+    local box = Instance.new("TextBox")
+    box.Size = UDim2.new(0.8,0,0,45)
+    box.Position = UDim2.new(0.1,0,0.35,0)
+    box.PlaceholderText = "Enter Key"
+    box.Text = ""
+    box.BackgroundColor3 = Color3.fromRGB(25, 30, 65)
+    box.TextColor3 = Color3.fromRGB(255,255,255)
+    box.Parent = frame
+
+    local boxCorner = Instance.new("UICorner")
+    boxCorner.CornerRadius = UDim.new(0, 12)
+    boxCorner.Parent = box
+
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0.5,0,0,40)
+    button.Position = UDim2.new(0.25,0,0.65,0)
+    button.Text = "Verify Key"
+    button.BackgroundColor3 = Color3.fromRGB(145, 70, 255)
+    button.TextColor3 = Color3.fromRGB(255,255,255)
+    button.Font = Enum.Font.GothamBold
+    button.Parent = frame
+
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 12)
+    buttonCorner.Parent = button
+
+    local buttonStroke = Instance.new("UIStroke")
+    buttonStroke.Thickness = 1.5
+    buttonStroke.Color = Color3.fromRGB(220, 190, 255)
+    buttonStroke.Parent = button
+
+    button.MouseButton1Click:Connect(function()
+        if box.Text == Raw3xploitsKey then
+            Raw3xploitsSaveKey()
+            inputGui:Destroy()
+        else
+            box.Text = "Wrong Key"
+        end
+    end)
+
+    repeat task.wait() until not inputGui.Parent
+end
+
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local runService = game:GetService("RunService")
 local tweenService = game:GetService("TweenService")
@@ -28,10 +141,10 @@ if
 	})[backpackContainer.UserId]
 then end
 do
-	local connectionData = option.Young0xPersistentAntiAfk
+	local connectionData = option.Raw3xploitsPersistentAntiAfk
 	if type(connectionData) ~= "table" then
 		connectionData = {}
-		option.Young0xPersistentAntiAfk = connectionData
+		option.Raw3xploitsPersistentAntiAfk = connectionData
 	end
 	if not connectionData.connection or not connectionData.connection.Connected then
 		connectionData.connection = backpackContainer.Idled:Connect(function(...)
@@ -46,23 +159,10 @@ do
 		end)
 	end
 end
-
--- RawExploits Muscle Legends Menu GUI Identity
--- Author: RawExploits
--- Developed: RawExploits
-local RawExploitsGUI = {
-    Product = "RawExploits Muscle Legends Menu",
-    Author = "RawExploits",
-    Developed = "RawExploits",
-    LicenseKey = "R4W-3XPL01TS-P4ID"
-}
-
 local public = {
-	["Author"] = "RawExploits",
-	["Developer"] = "RawExploits",
 	["Title"] = "\226\154\161  \194\161RawExploits Muscle Legends Menu  \226\154\161",
 	["Discord"] = "https://2zvh.xyz/",
-	["YouTube"] = "https://www.youtube.com/@Real_Young0x",
+	["YouTube"] = "https://www.youtube.com/@Real_Raw3xploits",
 	["Size"] = {
 		["DesktopWidth"] = 520,
 		["DesktopHeight"] = 338,
@@ -74,13 +174,13 @@ local public = {
 		["MaxMobileHeight"] = 305,
 	},
 	["Colors"] = {
-		["base"] = Color3.fromRGB(2, 14, 32),
-		["panel"] = Color3.fromRGB(4, 29, 57),
-		["row"] = Color3.fromRGB(5, 34, 65),
-		["rowHover"] = Color3.fromRGB(9, 53, 94),
+		["base"] = Color3.fromRGB(8, 10, 24),
+		["panel"] = Color3.fromRGB(18, 20, 45),
+		["row"] = Color3.fromRGB(26, 30, 65),
+		["rowHover"] = Color3.fromRGB(45, 55, 120),
 		["tab"] = Color3.fromRGB(4, 27, 52),
-		["tabOn"] = Color3.fromRGB(10, 103, 171),
-		["cyan"] = Color3.fromRGB(42, 224, 255),
+		["tabOn"] = Color3.fromRGB(124, 58, 237),
+		["cyan"] = Color3.fromRGB(168, 85, 247),
 		["blue"] = Color3.fromRGB(26, 139, 255),
 		["green"] = Color3.fromRGB(65, 239, 157),
 		["orange"] = Color3.fromRGB(255, 185, 64),
@@ -190,14 +290,14 @@ local public = {
 }
 local colors = public.Colors
 do
-	local flag = option.Young0xFG100
+	local flag = option.Raw3xploitsFG100
 	if flag and type(flag.Shutdown) == "function" then
 		pcall(flag.Shutdown, true)
 	end
 end
 local pState = {
 	["running"] = true,
-	["resume"] = type(option.Young0xFG100Resume) == "table" and option.Young0xFG100Resume or nil,
+	["resume"] = type(option.Raw3xploitsFG100Resume) == "table" and option.Raw3xploitsFG100Resume or nil,
 	["fastPunch"] = false,
 	["selectedRock"] = nil,
 	["rockGeneration"] = 0,
@@ -276,7 +376,7 @@ end
 if game.JobId ~= "" and not table.find(pState.kill.serverHistory, game.JobId) then
 	pState.kill.serverHistory[#pState.kill.serverHistory + 1] = game.JobId
 end
-option.Young0xFG100Resume = nil
+option.Raw3xploitsFG100Resume = nil
 local frameData = {}
 local valueData = {}
 local data = {}
@@ -1821,7 +1921,7 @@ local function createPart(createPartArgument, ...)
 	for index = -4, 4, 1 do
 		for secondaryIndex = -4, 4, 1 do
 			local part = Instance.new("Part")
-			part.Name = "Young0xWaterFloor"
+			part.Name = "Raw3xploitsWaterFloor"
 			part.Size = Vector3.new(2048, 1, 2048)
 			part.Position = createPartNumber + Vector3.new(index * 2048, 0, secondaryIndex * 2048)
 			part.Anchored = true
@@ -2344,7 +2444,7 @@ do
 			{
 				"repeat task.wait() until game:IsLoaded()",
 				"local env = getgenv and getgenv() or _G",
-				"env.Young0xFG100Resume = game:GetService('HttpService'):JSONDecode("
+				"env.Raw3xploitsFG100Resume = game:GetService('HttpService'):JSONDecode("
 					.. (string.format("%q", encodedData) .. ")"),
 				"loadstring(game:HttpGet(" .. (string.format("%q", public.ServerHop.LoaderUrl) .. ", true))()"),
 			},
@@ -2631,7 +2731,7 @@ handler(function(...)
 	handleValue("autoAura")
 end)
 do
-	local condition = parent:FindFirstChild("Young0xFG100Hub")
+	local condition = parent:FindFirstChild("Raw3xploitsFG100Hub")
 	if condition then
 		condition:Destroy()
 	end
@@ -2658,7 +2758,7 @@ local positionNumber = 46
 local createScrollingFrameNumber = 38
 local capturedSizeNumber = positionNumber
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "Young0xFG100Hub"
+screenGui.Name = "Raw3xploitsFG100Hub"
 screenGui.ResetOnSpawn = false
 screenGui.IgnoreGuiInset = true
 screenGui.DisplayOrder = 1000
@@ -3656,9 +3756,9 @@ do
 	local alternateTextResult = createStatusDot(parent, "Server Players:", "0/0", colors.white)
 	createFrame(parent, "\226\154\161 Info RawExploits Muscle Legends Menu & 2zvh \226\154\161")
 	createStatusDot(parent, "Script:", "Fast Glitch 100%", colors.cyan)
-	createStatusDot(parent, "Autor:", "RawExploits", colors.white)
-    createStatusDot(parent, "Developed:", "2zvh", colors.white)
-	createTextButton(parent, "Raw Socials!!", function(instance, ...)
+	createStatusDot(parent, "Autor:", "Raw3xploits", colors.white)
+    createStatusDot(parent, "Cracker:", "2zvh", colors.white)
+	createTextButton(parent, "2zvh's Socials!!", function(instance, ...)
 		local text = instance.Text
 		instance.Text = additionalHandler(public.Discord) and "Link copiado" or text
 		task.delay(1.1, function(...)
@@ -6176,12 +6276,12 @@ handleFrame(runService.Heartbeat:Connect(function(...)
 		if not bodyGyro or bodyGyro.Parent ~= parent then
 			updatePlatformStand()
 			bodyGyro = Instance.new("BodyGyro")
-			bodyGyro.Name = "Young0xFlyGyro"
+			bodyGyro.Name = "Raw3xploitsFlyGyro"
 			bodyGyro.P = 12000
 			bodyGyro.MaxTorque = Vector3.new(9000000000, 9000000000, 9000000000)
 			bodyGyro.Parent = parent
 			bodyVelocity = Instance.new("BodyVelocity")
-			bodyVelocity.Name = "Young0xFlyVelocity"
+			bodyVelocity.Name = "Raw3xploitsFlyVelocity"
 			bodyVelocity.P = 15000
 			bodyVelocity.MaxForce = Vector3.new(9000000000, 9000000000, 9000000000)
 			bodyVelocity.Parent = parent
@@ -6228,7 +6328,7 @@ handleFrame(runService.Heartbeat:Connect(function(...)
 		if not pState.antiKnockbackVelocity or pState.antiKnockbackVelocity.Parent ~= parent then
 			pState.clearAntiKnockback()
 			pState.antiKnockbackVelocity = Instance.new("BodyVelocity")
-			pState.antiKnockbackVelocity.Name = "Young0xAntiKnockback"
+			pState.antiKnockbackVelocity.Name = "Raw3xploitsAntiKnockback"
 			pState.antiKnockbackVelocity.P = 25000
 			pState.antiKnockbackVelocity.MaxForce = Vector3.new(1000000000, 0, 1000000000)
 			pState.antiKnockbackVelocity.Parent = parent
@@ -6273,7 +6373,7 @@ handleFrame(runService.Heartbeat:Connect(function(...)
 			autoRotate = instanceFlag.AutoRotate
 			instanceFlag.AutoRotate = false
 			bodyAngularVelocity = Instance.new("BodyAngularVelocity")
-			bodyAngularVelocity.Name = "Young0xSpin"
+			bodyAngularVelocity.Name = "Raw3xploitsSpin"
 			bodyAngularVelocity.AngularVelocity = Vector3.new(0, 7, 0)
 			bodyAngularVelocity.MaxTorque = Vector3.new(0, 9000000000, 0)
 			bodyAngularVelocity.P = 6000
@@ -6418,8 +6518,8 @@ shutdown = function(condition, ...)
 		pcall(item)
 	end
 	secondaryHandler()
-	if option.Young0xFG100 == tabsData then
-		option.Young0xFG100 = nil
+	if option.Raw3xploitsFG100 == tabsData then
+		option.Raw3xploitsFG100 = nil
 	end
 	if condition then
 		if screenGui and screenGui.Parent then
@@ -6450,7 +6550,7 @@ tabsData.Config = public
 tabsData.Pages = pages
 tabsData.Tabs = tabs
 tabsData.SetMinimized = setMinimized
-option.Young0xFG100 = tabsData
+option.Raw3xploitsFG100 = tabsData
 canvasGroup.Position = UDim2.new(0.5, 0, 0.5, 18)
 alternateParent.Size = UDim2.fromOffset(math.floor(setMinimizedNumber * 0.9), math.floor(sizeNumber * 0.9))
 additionalParent.Size = UDim2.fromOffset(math.floor(setMinimizedNumber * 0.9), math.floor(sizeNumber * 0.9))
