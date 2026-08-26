@@ -60,7 +60,7 @@ if not Raw3xploitsHasSavedKey() then
     local title = Instance.new("TextLabel")
     title.Size = UDim2.new(1,0,0,50)
     title.BackgroundTransparency = 1
-    title.Text = "RAW3XPLOITS  |  PREMIUM KEY SYSTEM\nMuscle Legends Menu"
+    title.Text = "RAW3XPLOITS  |  KEY SYSTEM\nMuscle Legends Menu"
     title.TextWrapped = true
     title.TextColor3 = Color3.fromRGB(255,255,255)
     title.TextScaled = true
@@ -6009,6 +6009,7 @@ local createFrameFlag, createFrameData = currentHandler()
 local nestedParent = pages["Pet Shop"]
 createFrame(nestedParent, "\240\159\144\190 Pets \240\159\144\190")
 local result = secondaryCreateFrame(nestedParent, "Choose Pet", createFrameFlag, function(...) end)
+_Raw3xploitsPetSelector = result
 local function sendCPetShopRemote(flag, ...)
 	local cPetShopFolder = replicatedStorage:FindFirstChild("cPetShopFolder")
 	local cPetShopRemote = replicatedStorage:FindFirstChild("cPetShopRemote")
@@ -6039,6 +6040,7 @@ secondaryCreateTextButton(nestedParent, "\240\159\148\129 Auto Buy Pet \240\159\
 end)
 createFrame(nestedParent, "\240\159\140\140 Auras \240\159\140\140")
 local secondaryResult = secondaryCreateFrame(nestedParent, "Choose Aura", createFrameData, function(...) end)
+_Raw3xploitsAuraSelector = secondaryResult
 createTextButton(nestedParent, "\240\159\140\140 Buy Aura \240\159\140\140", function(...)
 	sendCPetShopRemote(secondaryResult:Get())
 end)
@@ -6549,6 +6551,385 @@ tabsData.Pages = pages
 tabsData.Tabs = tabs
 tabsData.SetMinimized = setMinimized
 option.Raw3xploitsFG100 = tabsData
+
+local settingsFile = "Raw3xploits_Settings.json"
+
+local function saveSettings()
+    local data = {
+        fastPunch = pState.fastPunch,
+        autoWeight = pState.autoWeight,
+        autoHandstands = pState.autoHandstands,
+        autoLift = pState.autoLift,
+        autoSitups = pState.autoSitups,
+        autoEgg = pState.autoEgg,
+        hideDurability = pState.hideDurability,
+        hideFrames = pState.hideFrames,
+        antiLag = pState.antiLag,
+        walkWater = pState.walkWater,
+        autoSpinWheel = pState.autoSpinWheel,
+        autoClaimChests = pState.autoClaimChests,
+        removePortals = pState.removePortals,
+        fastSpeed = pState.fastSpeed,
+        fly = pState.fly,
+        flyLevel = pState.flyLevel,
+        antiKnockback = pState.antiKnockback,
+        noclip = pState.noclip,
+        spin = pState.spin,
+        spy = pState.spy,
+        spyTarget = pState.spyTarget,
+        killAuto = pState.kill.auto,
+        killKarmaMode = pState.kill.karmaMode,
+        killTarget = pState.kill.target,
+        killServerHop = pState.kill.serverHop,
+        killProtectFriends = pState.kill.protectFriends,
+        mainAutoSize = pState.mainAutoSize,
+        mainAutoSpeed = pState.mainAutoSpeed,
+        mainSize = pState.mainSize,
+        mainSpeed = pState.mainSpeed,
+        infiniteJump = pState.infiniteJump,
+        selectedRock = pState.selectedRock and pState.selectedRock.name or nil,
+        machine = pState.machine and pState.machine.label or nil,
+        rebirthSizeOne = pState.rebirth.sizeOne,
+        rebirthFastWeight = pState.rebirth.fastWeight,
+        rebirthKing = pState.rebirth.king,
+        rebirthLockPosition = pState.rebirth.lockPosition,
+        rebirthAutoTarget = pState.rebirth.autoTarget,
+        rebirthInfinite = pState.rebirth.infinite,
+        rebirthTarget = pState.rebirth.target,
+        autoPet = pState.autoPet,
+        autoAura = pState.autoAura,
+        selectedPet = _Raw3xploitsPetSelector and _Raw3xploitsPetSelector:Get() or nil,
+        selectedAura = _Raw3xploitsAuraSelector and _Raw3xploitsAuraSelector:Get() or nil,
+        fastFarmMode = pState.fastFarmMode,
+    }
+    local success, json = pcall(function()
+        return game:GetService("HttpService"):JSONEncode(data)
+    end)
+    if success and writefile then
+        pcall(function()
+            writefile(settingsFile, json)
+        end)
+    end
+end
+
+local function loadSettings()
+    if not isfile or not readfile then return nil end
+    local success, content = pcall(readfile, settingsFile)
+    if not success or not content or content == "" then return nil end
+    local success, data = pcall(function()
+        return game:GetService("HttpService"):JSONDecode(content)
+    end)
+    if not success or type(data) ~= "table" then return nil end
+    return data
+end
+
+local function applySetting(key, value)
+    if key == "fastPunch" then
+        alternateUpdateInstanceProperties(value)
+    elseif key == "autoWeight" then
+        sendMuscleEvent("autoWeight", value, { "Weight" }, 0.01)
+    elseif key == "autoHandstands" then
+        sendMuscleEvent("autoHandstands", value, { "Handstands", "Handstand" }, 0.01)
+    elseif key == "autoLift" then
+        sendMuscleEvent("autoLift", value, { "Pushup", "Pushups" }, 0.01)
+    elseif key == "autoSitups" then
+        sendMuscleEvent("autoSitups", value, { "Situps", "Situp" }, 0.01)
+    elseif key == "autoEgg" then
+        pState.setAutoEgg(value, "manual")
+    elseif key == "hideDurability" then
+        updateChildAddedConnection(value)
+    elseif key == "hideFrames" then
+        secondaryUpdateChildAddedConnection(value)
+    elseif key == "antiLag" then
+        updateDescendantAddedConnection(value, false)
+    elseif key == "walkWater" then
+        createPart(value)
+    elseif key == "autoSpinWheel" then
+        sendOpenFortuneWheelRemote(value)
+    elseif key == "autoClaimChests" then
+        updateAutoClaimChests(value)
+    elseif key == "removePortals" then
+        updateRemovePortals(value)
+    elseif key == "fastSpeed" then
+        updateFastSpeed(value)
+    elseif key == "fly" then
+        nestedUpdateInstanceProperties(value)
+    elseif key == "antiKnockback" then
+        pState.setAntiKnockback(value)
+    elseif key == "noclip" then
+        updateSteppedConnection(value)
+    elseif key == "spin" then
+        secondaryUpdateSpin(value)
+    elseif key == "spy" then
+        if value and pState.spyTarget then
+            updateSpy(true)
+        else
+            updateSpy(false)
+        end
+    elseif key == "killAuto" then
+        pState.setAutoKill(value)
+    elseif key == "killKarmaMode" then
+        if value then
+            pState.setKarmaKill(value, true)
+        end
+    elseif key == "killTarget" then
+        if value then
+            pState.kill.target = value
+            pState.setTargetKill(true)
+        end
+    elseif key == "killServerHop" then
+        pState.setServerHop(value)
+    elseif key == "killProtectFriends" then
+        pState.setProtectFriends(value)
+    elseif key == "mainAutoSize" then
+        pState.mainAutoSize = value
+        if value then
+            handleSendGiftRemote("mainAutoSize_restore", function()
+                while pState.running and pState.mainAutoSize do
+                    local rEvents = replicatedStorage:FindFirstChild("rEvents")
+                    local remote = rEvents and rEvents:FindFirstChild("changeSpeedSizeRemote")
+                    if remote then
+                        pcall(remote.InvokeServer, remote, "changeSize", pState.mainSize)
+                    end
+                    task.wait(0.1)
+                end
+            end)
+        else
+            handleValue("mainAutoSize_restore")
+        end
+    elseif key == "mainAutoSpeed" then
+        pState.mainAutoSpeed = value
+        if value then
+            handleSendGiftRemote("mainAutoSpeed_restore", function()
+                while pState.running and pState.mainAutoSpeed do
+                    local humanoid = isUseToolValid()
+                    if humanoid then
+                        humanoid.WalkSpeed = pState.mainSpeed
+                    end
+                    task.wait(0.05)
+                end
+            end)
+        else
+            handleValue("mainAutoSpeed_restore")
+        end
+    elseif key == "infiniteJump" then
+        pState.infiniteJump = value
+    elseif key == "selectedRock" then
+        if value then
+            for _, rock in ipairs(public.Rocks) do
+                if rock.name == value then
+                    pState.selectedRock = rock
+                    pState.rockSessionStartedAt = clock()
+                    break
+                end
+            end
+        end
+    elseif key == "machine" then
+        if value then
+            for _, mach in ipairs(public.Machines) do
+                if mach.label == value then
+                    additionalUpdateInstanceProperties(mach, true)
+                    break
+                end
+            end
+        end
+    elseif key == "rebirthSizeOne" then
+        pState.rebirth.sizeOne = value
+        if value then
+            handleSendGiftRemote("rebirthSizeOne_restore", function()
+                while pState.running and pState.rebirth.sizeOne do
+                    local rEvents = replicatedStorage:FindFirstChild("rEvents")
+                    local remote = rEvents and rEvents:FindFirstChild("changeSpeedSizeRemote")
+                    if remote then
+                        pcall(remote.InvokeServer, remote, "changeSize", 1)
+                    end
+                    task.wait(0.75)
+                end
+            end)
+        else
+            handleValue("rebirthSizeOne_restore")
+        end
+    elseif key == "rebirthFastWeight" then
+        sendMuscleEvent("rebirthFastWeight", value, { "Weight", "Heavy Weight" }, 0.005)
+    elseif key == "rebirthKing" then
+        pState.rebirth.king = value
+        if value then
+            handleSendGiftRemote("rebirthKing_restore", function()
+                local vector = Vector3.new(-8646, 13.25, -5738)
+                local number = 42
+                while pState.running and pState.rebirth.king do
+                    local input = isSendHitEventValid()
+                    if input and (input.Position - vector).Magnitude > number then
+                        local raycastParams = RaycastParams.new()
+                        raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+                        local filter = {}
+                        for _, plr in ipairs(players:GetPlayers()) do
+                            if plr.Character then table.insert(filter, plr.Character) end
+                        end
+                        raycastParams.FilterDescendantsInstances = filter
+                        raycastParams.IgnoreWater = true
+                        local hit = workspace:Raycast(vector + Vector3.new(0, 35, 0), Vector3.new(0, -80, 0), raycastParams)
+                        local pos = vector
+                        if hit then pos = Vector3.new(vector.X, hit.Position.Y + 3.1, vector.Z) end
+                        local cf = CFrame.new(pos)
+                        if pState.rebirth.lockPosition then pState.rebirth.lockCFrame = cf end
+                        input.CFrame = cf
+                        input.AssemblyLinearVelocity = Vector3.zero
+                        input.AssemblyAngularVelocity = Vector3.zero
+                    end
+                    task.wait(0.25)
+                end
+            end)
+        else
+            handleValue("rebirthKing_restore")
+        end
+    elseif key == "rebirthLockPosition" then
+        pState.rebirth.lockPosition = value
+        if value then
+            local inst = isSendHitEventValid()
+            pState.rebirth.lockCFrame = inst and inst.CFrame or nil
+            handleSendGiftRemote("rebirthLock_restore", function()
+                while pState.running and pState.rebirth.lockPosition do
+                    local inst = isSendHitEventValid()
+                    if inst and pState.rebirth.lockCFrame then
+                        inst.CFrame = pState.rebirth.lockCFrame
+                        inst.AssemblyLinearVelocity = Vector3.zero
+                        inst.AssemblyAngularVelocity = Vector3.zero
+                    end
+                    runService.Heartbeat:Wait()
+                end
+            end)
+        else
+            handleValue("rebirthLock_restore")
+        end
+    elseif key == "rebirthAutoTarget" then
+        pState.rebirth.autoTarget = value
+        if value and pState.rebirth.target then
+            handleSendGiftRemote("rebirthLoop_restore", function()
+                while pState.running and pState.rebirth.autoTarget do
+                    local rebirthVal = isUpdateInstancePropertiesValid(backpackContainer, { "Rebirths", "Rebirth" })
+                    local current = tonumber(rebirthVal and rebirthVal.Value) or 0
+                    if current >= pState.rebirth.target then
+                        pState.rebirth.autoTarget = false
+                        break
+                    end
+                    local rEvents = replicatedStorage:FindFirstChild("rEvents")
+                    local remote = rEvents and rEvents:FindFirstChild("rebirthRemote")
+                    if remote then pcall(remote.InvokeServer, remote, "rebirthRequest") end
+                    task.wait(0.1)
+                end
+            end)
+        else
+            handleValue("rebirthLoop_restore")
+        end
+    elseif key == "rebirthInfinite" then
+        pState.rebirth.infinite = value
+        if value then
+            handleSendGiftRemote("rebirthLoop_restore_inf", function()
+                while pState.running and pState.rebirth.infinite do
+                    local rEvents = replicatedStorage:FindFirstChild("rEvents")
+                    local remote = rEvents and rEvents:FindFirstChild("rebirthRemote")
+                    if remote then pcall(remote.InvokeServer, remote, "rebirthRequest") end
+                    task.wait(0.1)
+                end
+            end)
+        else
+            handleValue("rebirthLoop_restore_inf")
+        end
+    elseif key == "rebirthTarget" then
+        pState.rebirth.target = value
+    elseif key == "autoPet" then
+        pState.autoPet = value
+        if value then
+            handleSendGiftRemote("autoPet_restore", function()
+                while pState.running and pState.autoPet do
+                    local cPetShopFolder = replicatedStorage:FindFirstChild("cPetShopFolder")
+                    local remote = replicatedStorage:FindFirstChild("cPetShopRemote")
+                    if cPetShopFolder and remote then
+                        local petName = result:Get()
+                        if petName then
+                            local pet = cPetShopFolder:FindFirstChild(petName)
+                            if pet then pcall(remote.InvokeServer, remote, pet) end
+                        end
+                    end
+                    task.wait(0.18)
+                end
+            end)
+        else
+            handleValue("autoPet_restore")
+        end
+    elseif key == "autoAura" then
+        pState.autoAura = value
+        if value then
+            handleSendGiftRemote("autoAura_restore", function()
+                while pState.running and pState.autoAura do
+                    local cPetShopFolder = replicatedStorage:FindFirstChild("cPetShopFolder")
+                    local remote = replicatedStorage:FindFirstChild("cPetShopRemote")
+                    if cPetShopFolder and remote then
+                        local auraName = secondaryResult:Get()
+                        if auraName then
+                            local aura = cPetShopFolder:FindFirstChild(auraName)
+                            if aura then pcall(remote.InvokeServer, remote, aura) end
+                        end
+                    end
+                    task.wait(0.18)
+                end
+            end)
+        else
+            handleValue("autoAura_restore")
+        end
+    elseif key == "fastFarmMode" then
+        if value then
+            modeData:Start(value)
+        end
+    end
+end
+
+local function applySettings(settings)
+    if not settings then return end
+    if settings.mainSize then pState.mainSize = settings.mainSize end
+    if settings.mainSpeed then pState.mainSpeed = settings.mainSpeed end
+    if settings.flyLevel then pState.flyLevel = settings.flyLevel end
+    if settings.rebirthTarget then pState.rebirth.target = settings.rebirthTarget end
+    if settings.spyTarget then pState.spyTarget = settings.spyTarget end
+    if settings.selectedPet and _Raw3xploitsPetSelector then
+    local values = _Raw3xploitsPetSelector.values or {}
+    for i, v in ipairs(values) do
+        local match = (v == settings.selectedPet) or (type(v) == "table" and v.name == settings.selectedPet)
+        if match then
+            _Raw3xploitsPetSelector:SetIndex(i)
+            break
+        end
+    end
+end
+if settings.selectedAura and _Raw3xploitsAuraSelector then
+    local values = _Raw3xploitsAuraSelector.values or {}
+    for i, v in ipairs(values) do
+        local match = (v == settings.selectedAura) or (type(v) == "table" and v.name == settings.selectedAura)
+        if match then
+            _Raw3xploitsAuraSelector:SetIndex(i)
+            break
+        end
+    end
+end
+    for key, value in pairs(settings) do
+        if key ~= "mainSize" and key ~= "mainSpeed" and key ~= "flyLevel" and key ~= "rebirthTarget" and key ~= "spyTarget" then
+            applySetting(key, value)
+        end
+    end
+end
+
+local loaded = loadSettings()
+if loaded then
+    applySettings(loaded)
+end
+
+local originalShutdown = shutdown
+shutdown = function(condition, ...)
+    saveSettings()
+    originalShutdown(condition, ...)
+end
+
 canvasGroup.Position = UDim2.new(0.5, 0, 0.5, 18)
 alternateParent.Size = UDim2.fromOffset(math.floor(setMinimizedNumber * 0.9), math.floor(sizeNumber * 0.9))
 additionalParent.Size = UDim2.fromOffset(math.floor(setMinimizedNumber * 0.9), math.floor(sizeNumber * 0.9))
